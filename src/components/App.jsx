@@ -1,23 +1,20 @@
-// import { nanoid } from 'nanoid';
 import { nanoid } from '@reduxjs/toolkit';
 import { AddContactForm } from './AddContactForm/AddContactForm';
 import { ContactsList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../redux/contactsSlice';
+import { addContact, removeContact } from '../redux/contactsSlice';
+import { filtered } from '../redux/filterSlice';
+
 export const App = () => {
   const contacts = useSelector(store => {
     return store.contacts;
   });
-  const filter = useSelector(store => {
-    return store.filter;
+  const filterState = useSelector(store => {
+    return store.filtered;
   });
 
   const dispatch = useDispatch();
-
-  console.log('🚀  filter:', filter);
-
-  console.log('🚀  contacts:', contacts);
 
   const addContactFunction = formState => {
     const { name, number } = formState;
@@ -35,13 +32,15 @@ export const App = () => {
   };
 
   const changeFilter = event => {
-    dispatch(filter(event.target.value));
+    dispatch(filtered(event.target.value));
   };
 
-  const deleteContact = contactId => {};
+  const deleteContact = contactId => {
+    dispatch(removeContact(contactId));
+  };
 
   const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
+    contact.name.toLowerCase().includes(filterState.toLowerCase())
   );
 
   return (
@@ -49,14 +48,9 @@ export const App = () => {
       <h1>Phonebook</h1>
       <AddContactForm onAddContact={addContactFunction} />
       <h2>Contacts</h2>
-      <Filter changeValue={changeFilter} value={filter} />
+      <Filter changeValue={changeFilter} value={filterState} />
       <ContactsList
         contacts={filteredContacts}
-        // onFilterChange={
-        //   {
-        //     /*this.updateInputState*/
-        //   }
-        // }
         onDeleteButton={deleteContact}
       />
     </>

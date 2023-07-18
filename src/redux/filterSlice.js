@@ -3,15 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = '';
 
 export const filterSlice = createSlice({
-  name: 'filter',
+  name: 'filtered',
   initialState,
   reducers: {
-    filter: (contacts, value) => {
-      return contacts.filter(contact => contact.name.includes(value));
+    filtered: (contacts, value) => {
+      return value.payload;
     },
   },
 });
 
-export const { filter } = filterSlice.actions;
+export const { filtered } = filterSlice.actions;
 
-export default filterSlice;
+export default filterSlice.reducer;
